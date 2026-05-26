@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buổi 9 – Nguồn máy tính & Làm mát</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --bg:#0f1117; --sidebar:#161820; --card:#1e2030; --card2:#252840;
+  --border:#2a2d45; --text:#e2e4f0; --muted:#6b7094;
+  --accent:#ff9f43; --accent2:#ff6b6b; --green:#4ecca3;
+  --yellow:#ffd166; --blue:#6c8aff; --purple:#b48eff;
+  --orange:#ff9f43; --red:#ff6b6b; --teal:#00d2d3;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:270px;min-width:270px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:100;overflow-y:auto;}
+.sb-header{padding:22px 18px 16px;border-bottom:1px solid var(--border);}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.sb-icon{width:36px;height:36px;background:linear-gradient(135deg,#ff9f43,#ff6b6b);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.sb-title{font-size:0.9rem;font-weight:800;line-height:1.2;}
+.sb-badge{font-size:0.65rem;padding:3px 9px;background:rgba(255,159,67,0.12);border:1px solid rgba(255,159,67,0.25);border-radius:20px;color:var(--orange);font-weight:700;margin-top:4px;display:inline-block;}
+.sb-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);padding:16px 18px 6px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 18px;cursor:pointer;transition:all .2s;border-left:3px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,.04);}
+.nav-item.active{background:rgba(255,159,67,.08);border-left-color:var(--orange);}
+.nav-item.locked{opacity:.4;cursor:default;}
+.nav-dot{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.nav-info{flex:1;min-width:0;}
+.nav-title{font-size:0.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-sub{font-size:0.66rem;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-tag{font-size:0.58rem;font-weight:700;padding:2px 6px;border-radius:8px;flex-shrink:0;}
+.sb-footer{margin-top:auto;padding:14px 18px;border-top:1px solid var(--border);font-size:0.7rem;color:var(--muted);text-align:center;line-height:1.6;}
+
+/* MAIN */
+.main{margin-left:270px;flex:1;height:100vh;overflow-y:auto;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* HERO */
+.hero{padding:44px 48px 36px;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.015) 0,rgba(255,255,255,.015) 1px,transparent 0,transparent 50%);background-size:20px 20px;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.15);margin-bottom:14px;position:relative;z-index:1;}
+.hero h1{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:900;line-height:1.15;margin-bottom:10px;position:relative;z-index:1;}
+.hero p{font-size:0.9rem;opacity:.82;max-width:540px;line-height:1.6;margin-bottom:22px;position:relative;z-index:1;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;position:relative;z-index:1;}
+.chip{background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:5px 13px;font-size:0.76rem;font-weight:600;}
+
+/* TABS */
+.tabs-wrap{border-bottom:1px solid var(--border);background:var(--sidebar);padding:0 48px;display:flex;gap:4px;overflow-x:auto;}
+.tab-btn{padding:14px 18px;font-size:0.82rem;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--orange);border-bottom-color:var(--orange);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* CONTENT */
+.content{padding:32px 48px 60px;max-width:920px;}
+.section{margin-bottom:36px;}
+.sec-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:11px;border-bottom:1px solid var(--border);}
+.sec-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.82rem;flex-shrink:0;}
+.sec-title{font-size:1rem;font-weight:800;}
+.sec-sub{font-size:0.76rem;color:var(--muted);font-weight:500;margin-left:auto;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.card h4{font-size:0.88rem;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.card p,.card li{font-size:0.85rem;color:#b8bcd8;line-height:1.7;}
+.card ul,.card ol{padding-left:18px;}
+.card li{margin-bottom:5px;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+
+/* CALLOUT */
+.callout{border-radius:12px;padding:13px 15px;margin-bottom:12px;display:flex;gap:11px;font-size:0.84rem;line-height:1.65;border:1px solid;}
+.ci{font-size:1.15rem;flex-shrink:0;margin-top:1px;}
+.c-yellow{background:rgba(255,209,102,.07);border-color:rgba(255,209,102,.25);color:#ffe08a;}
+.c-green{background:rgba(78,204,163,.07);border-color:rgba(78,204,163,.25);color:#a8f0da;}
+.c-red{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.28);color:#ffb3b3;}
+.c-blue{background:rgba(108,138,255,.07);border-color:rgba(108,138,255,.25);color:#b3c4ff;}
+.c-orange{background:rgba(255,159,67,.07);border-color:rgba(255,159,67,.25);color:#ffd4a3;}
+.c-teal{background:rgba(0,210,211,.07);border-color:rgba(0,210,211,.25);color:#a0f0f0;}
+
+/* CODE */
+.codeblock{background:#0d0f18;border:1px solid var(--border);border-radius:12px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.9;overflow-x:auto;margin-bottom:12px;}
+.cg{color:#4ecca3;} .cy{color:#ffd166;font-weight:700;} .cm{color:#4a4e6a;} .cb{color:#74b9ff;} .cr{color:#ff6b6b;}
+
+/* TABLE */
+.tw{overflow-x:auto;margin-bottom:12px;}
+table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+thead tr{background:rgba(255,255,255,.04);}
+th{padding:9px 13px;text-align:left;font-weight:700;font-size:0.7rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);}
+td{padding:9px 13px;border-bottom:1px solid rgba(42,45,69,.6);color:#b8bcd8;vertical-align:middle;}
+.tc{text-align:center;}
+.tmon{font-family:'JetBrains Mono',monospace;font-size:.82rem;}
+.tacc{color:var(--yellow);font-weight:700;}
+.tgrn{color:var(--green);font-weight:600;}
+.tred{color:var(--red);}
+.torg{color:var(--orange);font-weight:600;}
+
+/* RATING BARS */
+.rating-bar{display:flex;align-items:center;gap:8px;margin:4px 0;}
+.rb-label{font-size:.75rem;color:var(--muted);min-width:60px;}
+.rb-track{flex:1;height:7px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;}
+.rb-fill{height:100%;border-radius:4px;}
+
+/* WATT CALC */
+.calc-box{background:var(--card);border:1px solid var(--orange);border-radius:14px;padding:20px 22px;margin-bottom:12px;}
+.calc-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.calc-label{font-size:.82rem;color:#b8bcd8;min-width:120px;}
+.calc-input{background:#0d0f18;border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--yellow);width:90px;outline:none;transition:.2s;}
+.calc-input:focus{border-color:var(--orange);}
+.calc-unit{font-size:.75rem;color:var(--muted);}
+.calc-result{background:rgba(255,159,67,.1);border:1px solid rgba(255,159,67,.3);border-radius:10px;padding:14px 16px;margin-top:12px;text-align:center;}
+.calc-result .cr-num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:800;color:var(--orange);}
+.calc-result .cr-sub{font-size:.78rem;color:var(--muted);margin-top:4px;}
+.calc-btn{background:linear-gradient(135deg,var(--orange),#ff6b6b);border:none;border-radius:9px;padding:9px 20px;font-size:.82rem;font-weight:700;color:white;cursor:pointer;transition:.2s;}
+.calc-btn:hover{opacity:.88;}
+
+/* TEMP METER */
+.temp-meter{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.temp-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.temp-label{font-size:.82rem;min-width:140px;color:#b8bcd8;}
+.temp-bar{flex:1;height:14px;background:rgba(255,255,255,.06);border-radius:7px;overflow:hidden;position:relative;}
+.temp-fill{height:100%;border-radius:7px;position:relative;}
+.temp-val{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;min-width:44px;text-align:right;}
+.temp-zones{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);padding:0 2px;margin-top:4px;}
+
+/* TOGGLE ANSWER */
+.toggle-ans{background:rgba(108,138,255,.1);border:1px solid rgba(108,138,255,.25);border-radius:8px;padding:6px 13px;font-size:.76rem;font-weight:700;color:var(--blue);cursor:pointer;margin-top:9px;display:inline-flex;align-items:center;gap:5px;transition:.2s;}
+.toggle-ans:hover{background:rgba(108,138,255,.18);}
+.ans-box{display:none;background:#0d0f18;border:1px solid var(--border);border-radius:10px;padding:13px 15px;margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.9;color:var(--green);}
+.exercise{border-radius:14px;padding:16px 18px;border:1px solid;margin-bottom:10px;}
+.ex-easy{background:rgba(78,204,163,.05);border-color:rgba(78,204,163,.2);}
+.ex-med{background:rgba(255,209,102,.05);border-color:rgba(255,209,102,.2);}
+.ex-hard{background:rgba(255,107,107,.05);border-color:rgba(255,107,107,.2);}
+.ex-tag{font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.ex-easy .ex-tag{color:var(--green);}
+.ex-med .ex-tag{color:var(--yellow);}
+.ex-hard .ex-tag{color:var(--red);}
+.ex-p{font-size:.85rem;color:#b8bcd8;margin-bottom:6px;line-height:1.6;}
+.ex-ul{padding-left:18px;} .ex-ul li{font-size:.85rem;color:#b8bcd8;margin-bottom:5px;line-height:1.6;}
+
+/* VOLTAGE VISUAL */
+.volt-row{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0;}
+.volt-chip{border-radius:12px;padding:14px 18px;text-align:center;border:2px solid;min-width:90px;}
+.volt-num{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:800;}
+.volt-label{font-size:.7rem;font-weight:600;margin-top:3px;}
+.volt-use{font-size:.68rem;color:var(--muted);margin-top:4px;}
+
+/* 80PLUS visual */
+.plus80-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
+.cert-chip{border-radius:10px;padding:10px 14px;text-align:center;border:1px solid;min-width:76px;flex:1;}
+.cert-name{font-size:.78rem;font-weight:800;}
+.cert-eff{font-size:.7rem;margin-top:3px;}
+
+/* AIRFLOW DIAGRAM */
+.airflow-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.af-case{border:2px solid var(--border);border-radius:10px;padding:18px;position:relative;background:#0d0f18;min-height:160px;margin:12px 0;}
+.af-label{font-size:.7rem;color:var(--muted);position:absolute;}
+.fan-icon{font-size:1.6rem;position:absolute;transition:.5s;}
+
+/* COMING SOON */
+.coming{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center;padding:40px;}
+.coming-icon{font-size:3.5rem;margin-bottom:18px;opacity:.35;}
+.coming h2{font-size:1.4rem;font-weight:800;color:var(--muted);margin-bottom:8px;}
+.coming p{font-size:.88rem;color:var(--muted);max-width:340px;line-height:1.6;}
+
+/* MENU TOGGLE */
+.menu-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--card);border:1px solid var(--border);border-radius:10px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform .3s;}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .menu-toggle{display:flex;}
+  .hero,.content{padding:22px 18px;}
+  .tabs-wrap{padding:0 18px;}
+  .g2,.g3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="menu-toggle" onclick="document.getElementById('sb').classList.toggle('open')">☰</div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sb">
+  <div class="sb-header">
+    <div class="sb-logo">
+      <div class="sb-icon">🖥️</div>
+      <div class="sb-title">Phần cứng<br>Máy tính</div>
+    </div>
+    <span class="sb-badge">Hardware · Thực hành</span>
+  </div>
+
+  <div class="sb-label">Các buổi học</div>
+
+  <div class="nav-item locked"><div class="nav-dot" style="background:rgba(108,138,255,.15);color:#6c8aff;">01</div><div class="nav-info"><div class="nav-title">Tổng quan phần cứng</div><div class="nav-sub">Giới thiệu các linh kiện</div></div></div>
+  <div class="nav-item locked"><div class="nav-dot" style="background:rgba(78,204,163,.15);color:#4ecca3;">02</div><div class="nav-info"><div class="nav-title">CPU – Bộ xử lý</div><div class="nav-sub">Core, thread, xung nhịp</div></div></div>
+  <div class="nav-item locked"><div class="nav-dot" style="background:rgba(255,209,102,.15);color:#ffd166;">03</div><div class="nav-info"><div class="nav-title">RAM – Bộ nhớ</div><div class="nav-sub">DDR4, DDR5, tốc độ</div></div></div>
+  <div class="nav-item locked"><div class="nav-dot" style="background:rgba(180,142,255,.15);color:#b48eff;">04</div><div class="nav-info"><div class="nav-title">Mainboard</div><div class="nav-sub">Chipset, socket, kết nối</div></div></div>
+  <div class="nav-item locked"><div class="nav-dot" style="background:rgba(255,107,107,.15);color:#ff6b6b;">05</div><div class="nav-info"><div class="nav-title">GPU – Card đồ họa</div><div class="nav-sub">VRAM, render, gaming</div></div></div>
+  <div class="nav-item locked"><div class="nav-dot" style="background:rgba(0,210,211,.15);color:#00d2d3;">06</div><div class="nav-info"><div class="nav-title">Lưu trữ HDD & SSD</div><div class="nav-sub">NVMe, SATA, tốc độ đọc ghi</div></div></div>
+  <div class="nav-item locked"><div class="nav-dot" style="background:rgba(255,159,67,.15);color:#ff9f43;">07</div><div class="nav-info"><div class="nav-title">Case máy tính</div><div class="nav-sub">ATX, mATX, form factor</div></div></div>
+  <div class="nav-item locked"><div class="nav-dot" style="background:rgba(108,138,255,.15);color:#6c8aff;">08</div><div class="nav-info"><div class="nav-title">Kết nối & Ngoại vi</div><div class="nav-sub">USB, HDMI, PCIe</div></div></div>
+  <div class="nav-item active" onclick="showPage('s9',this)"><div class="nav-dot" style="background:rgba(255,107,107,.2);color:#ff6b6b;">09</div><div class="nav-info"><div class="nav-title">Nguồn & Làm mát</div><div class="nav-sub">PSU, tản nhiệt, luồng gió</div></div><span class="nav-tag" style="background:rgba(78,204,163,.15);color:var(--green);">✓ Mới</span></div>
+  <div class="nav-item locked"><div class="nav-dot" style="background:rgba(180,142,255,.15);color:#b48eff;">10</div><div class="nav-info"><div class="nav-title">Lắp ráp máy tính</div><div class="nav-sub">Thực hành từng bước</div></div><span class="nav-tag" style="background:rgba(108,138,255,.1);color:var(--blue);">Sắp có</span></div>
+
+  <div class="sb-footer">Khóa học Phần cứng máy tính<br>Thực hành & Lý thuyết</div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+<div class="page active" id="page-s9">
+
+  <!-- HERO -->
+  <div class="hero" style="background:linear-gradient(135deg,#1a0000 0%,#4a1010 35%,#8b2020 65%,#c0392b 85%,#e74c3c 100%);">
+    <div class="hero-tag">📅 Buổi 9 / 10</div>
+    <h1>⚡ Nguồn máy tính & Làm mát<br>— PSU · Tản nhiệt · Luồng gió</h1>
+    <p>Hai thứ "thầm lặng nhưng cực quan trọng" — nguồn kém có thể phá hủy toàn bộ linh kiện, làm mát kém khiến máy chậm như rùa.</p>
+    <div class="hero-chips">
+      <span class="chip">⏱ 90 phút</span>
+      <span class="chip">📖 Lý thuyết + 🛠️ Thực hành</span>
+      <span class="chip">🧰 HWiNFO64 · Prime95 · FurMark</span>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-wrap">
+    <button class="tab-btn active" onclick="switchTab('t1',this)">⚡ Phần 1: Nguồn PSU</button>
+    <button class="tab-btn" onclick="switchTab('t2',this)">❄️ Phần 2: Làm mát</button>
+    <button class="tab-btn" onclick="switchTab('t3',this)">🛠️ Thực hành</button>
+    <button class="tab-btn" onclick="switchTab('t4',this)">✏️ Bài tập</button>
+    <button class="tab-btn" onclick="switchTab('t5',this)">💡 Tóm tắt</button>
+  </div>
+
+  <!-- ═══ TAB 1: NGUỒN PSU ═══ -->
+  <div class="tab-pane active" id="tab-t1">
+  <div class="content">
+
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(255,209,102,.15);">⚡</div>
+        <div class="sec-title">PSU là gì? Tại sao quan trọng?</div>
+      </div>
+
+      <div class="callout c-red">
+        <span class="ci">🔥</span>
+        <div><strong>Sự thật đáng sợ:</strong> Nguồn điện là linh kiện DUY NHẤT có thể phá hủy <em>toàn bộ</em> các linh kiện còn lại chỉ trong vài giây. CPU 10 triệu, GPU 15 triệu đều tan tành nếu dùng nguồn rởm.</div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <h4 style="color:var(--yellow);">🔌 PSU làm gì?</h4>
+          <p>PSU (Power Supply Unit) chuyển đổi dòng điện <strong>220V AC</strong> từ ổ cắm nhà thành các mức điện áp <strong>DC</strong> (một chiều) mà linh kiện máy tính cần.</p>
+          <div class="volt-row" style="margin-top:12px;">
+            <div class="volt-chip" style="border-color:#ffd166;background:rgba(255,209,102,.07);">
+              <div class="volt-num" style="color:#ffd166;">12V</div>
+              <div class="volt-label" style="color:#ffd166;">Vàng</div>
+              <div class="volt-use">CPU, GPU, quạt</div>
+            </div>
+            <div class="volt-chip" style="border-color:#ff6b6b;background:rgba(255,107,107,.07);">
+              <div class="volt-num" style="color:#ff6b6b;">5V</div>
+              <div class="volt-label" style="color:#ff6b6b;">Đỏ</div>
+              <div class="volt-use">USB, ổ đĩa</div>
+            </div>
+            <div class="volt-chip" style="border-color:#74b9ff;background:rgba(116,185,255,.07);">
+              <div class="volt-num" style="color:#74b9ff;">3.3V</div>
+              <div class="volt-label" style="color:#74b9ff;">Cam</div>
+              <div class="volt-use">RAM, mainboard</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--yellow);">📊 Chọn công suất bao nhiêu?</h4>
+          <p style="margin-bottom:8px;">Công thức đơn giản:</p>
+          <div class="codeblock" style="padding:12px 14px;">
+<span class="cm">-- Ước tính nhanh --</span>
+CPU TDP + GPU TDP
++ Phần còn lại (~100W)
+= Tổng tiêu thụ
+
+× 1.2 (buffer 20%)
+<span class="cy">= Công suất nguồn nên chọn</span>
+          </div>
+          <p style="font-size:.78rem;color:var(--muted);">Ví dụ: CPU 65W + GPU 200W + 100W = 365W × 1.2 ≈ <strong style="color:var(--orange);">450W</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 80 PLUS -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(78,204,163,.15);">🏅</div>
+        <div class="sec-title">Hiệu suất 80 PLUS — Chứng nhận chất lượng</div>
+        <span class="sec-sub">Càng cao = tiết kiệm điện hơn, ít nhiệt hơn</span>
+      </div>
+
+      <div class="card">
+        <h4 style="color:var(--green);">📈 Hiệu suất là gì?</h4>
+        <p style="margin-bottom:12px;">Nguồn 80+ đảm bảo ít nhất <strong>80%</strong> điện lấy từ ổ cắm được chuyển thành điện cho linh kiện — phần còn lại tỏa ra thành nhiệt. Gold nghĩa là ~90% hiệu suất.</p>
+        <div class="plus80-row">
+          <div class="cert-chip" style="border-color:#ccc;background:rgba(200,200,200,.06);">
+            <div class="cert-name" style="color:#ccc;">⬜ White</div>
+            <div class="cert-eff" style="color:var(--muted);">≥80%</div>
+          </div>
+          <div class="cert-chip" style="border-color:#cd7f32;background:rgba(205,127,50,.06);">
+            <div class="cert-name" style="color:#cd7f32;">🥉 Bronze</div>
+            <div class="cert-eff" style="color:var(--muted);">≥82%</div>
+          </div>
+          <div class="cert-chip" style="border-color:#c0c0c0;background:rgba(192,192,192,.06);">
+            <div class="cert-name" style="color:#c0c0c0;">🥈 Silver</div>
+            <div class="cert-eff" style="color:var(--muted);">≥85%</div>
+          </div>
+          <div class="cert-chip" style="border-color:#ffd700;background:rgba(255,215,0,.08);">
+            <div class="cert-name" style="color:#ffd700;">🥇 Gold</div>
+            <div class="cert-eff" style="color:var(--muted);">≥87%</div>
+          </div>
+          <div class="cert-chip" style="border-color:#e5e4e2;background:rgba(229,228,226,.06);">
+            <div class="cert-name" style="color:#e5e4e2;">💎 Platinum</div>
+            <div class="cert-eff" style="color:var(--muted);">≥89%</div>
+          </div>
+          <div class="cert-chip" style="border-color:#b0e0e6;background:rgba(176,224,230,.06);">
+            <div class="cert-name" style="color:#b0e0e6;">✨ Titanium</div>
+            <div class="cert-eff" style="color:var(--muted);">≥90%</div>
+          </div>
+        </div>
+        <div class="callout c-yellow" style="margin-bottom:0;">
+          <span class="ci">💡</span>
+          <div><strong>Khuyến nghị thực tế:</strong> Dùng ít nhất <strong>Bronze</strong> cho máy thường. Dùng <strong>Gold</strong> cho máy gaming hoặc workstation. Titanium là "overkill" và giá rất cao.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULAR -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(180,142,255,.15);">🔧</div>
+        <div class="sec-title">Modular vs Non-modular</div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <h4 style="color:#b48eff;">🔗 Non-Modular (Dây liền)</h4>
+          <p>Tất cả dây điện <strong>gắn cố định</strong> vào nguồn, dù bạn không cần dùng.</p>
+          <ul style="margin-top:8px;">
+            <li>✅ Rẻ hơn</li>
+            <li>✅ Đơn giản, không thể cắm sai</li>
+            <li>❌ Dây thừa rối bên trong case</li>
+            <li>❌ Cản luồng gió nếu không buộc gọn</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4 style="color:#4ecca3;">🔌 Modular (Dây rời)</h4>
+          <p>Chỉ cắm <strong>những dây bạn cần</strong>, dây không dùng cất đi.</p>
+          <ul style="margin-top:8px;">
+            <li>✅ Case gọn gàng, đẹp</li>
+            <li>✅ Luồng gió tốt hơn</li>
+            <li>✅ Dễ quản lý dây (cable management)</li>
+            <li>❌ Giá cao hơn 200–400k</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout c-blue">
+        <span class="ci">💡</span>
+        <div>Còn có loại <strong>Semi-Modular</strong>: dây 24-pin mainboard và CPU 8-pin cắm cố định (luôn dùng), các dây còn lại là dây rời. Đây là lựa chọn <em>tính giá/giá trị tốt nhất</em>.</div>
+      </div>
+    </div>
+
+    <!-- NGUY HIỂM -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(255,107,107,.2);">💀</div>
+        <div class="sec-title">Tại sao nguồn kém chất lượng CỰC KỲ NGUY HIỂM?</div>
+      </div>
+      <div class="callout c-red">
+        <span class="ci">🔥</span>
+        <div><strong>Thực tế đã xảy ra:</strong> Nguồn rởm 200k phát nổ → cháy cả tủ máy, CPU, GPU, RAM, mainboard. Thiệt hại 20–30 triệu chỉ để tiết kiệm 500k tiền nguồn.</div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <h4 style="color:var(--red);">⚠️ Nguồn kém gây ra</h4>
+          <ul>
+            <li>🔥 Điện áp không ổn định → linh kiện hỏng dần</li>
+            <li>💥 Tụ điện nổ → cháy mainboard, GPU</li>
+            <li>⚡ Không có bảo vệ quá áp (OVP) → CPU cháy</li>
+            <li>🌊 Ripple cao → RAM lỗi, crash bất ngờ</li>
+            <li>🔇 Tiếng ồn điện → ảnh hưởng âm thanh, USB</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--green);">✅ Thương hiệu uy tín</h4>
+          <ul>
+            <li>🏆 <strong>Seasonic</strong> — Tốt nhất thị trường, tự sản xuất</li>
+            <li>🏆 <strong>Corsair</strong> — RMx, HXi series rất bền</li>
+            <li>🥈 <strong>EVGA</strong> — SuperNOVA series (đã ngừng bán GPU)</li>
+            <li>🥈 <strong>Cooler Master</strong> — MWE Gold, V series</li>
+            <li>🥉 <strong>be quiet!</strong> — Im lặng, chất lượng cao</li>
+            <li>🥉 <strong>FSP</strong> — Tốt trong tầm giá</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- ═══ TAB 2: LÀM MÁT ═══ -->
+  <div class="tab-pane" id="tab-t2">
+  <div class="content">
+
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(0,210,211,.15);">🌡️</div>
+        <div class="sec-title">Tại sao cần làm mát?</div>
+      </div>
+
+      <!-- TEMP METER -->
+      <div class="temp-meter">
+        <h4 style="font-size:.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;">🌡️ Nhiệt độ hoạt động điển hình</h4>
+        <div class="temp-row">
+          <div class="temp-label">CPU (idle)</div>
+          <div class="temp-bar"><div class="temp-fill" style="width:30%;background:linear-gradient(90deg,#4ecca3,#6c8aff);"></div></div>
+          <div class="temp-val" style="color:var(--green);">30–40°C</div>
+        </div>
+        <div class="temp-row">
+          <div class="temp-label">CPU (gaming)</div>
+          <div class="temp-bar"><div class="temp-fill" style="width:65%;background:linear-gradient(90deg,#6c8aff,#ffd166);"></div></div>
+          <div class="temp-val" style="color:var(--yellow);">60–75°C</div>
+        </div>
+        <div class="temp-row">
+          <div class="temp-label">CPU (giới hạn ⚠️)</div>
+          <div class="temp-bar"><div class="temp-fill" style="width:88%;background:linear-gradient(90deg,#ffd166,#ff6b6b);"></div></div>
+          <div class="temp-val" style="color:var(--red);">90–95°C</div>
+        </div>
+        <div class="temp-row">
+          <div class="temp-label">GPU (gaming)</div>
+          <div class="temp-bar"><div class="temp-fill" style="width:70%;background:linear-gradient(90deg,#6c8aff,#ff9f43);"></div></div>
+          <div class="temp-val" style="color:var(--orange);">65–83°C</div>
+        </div>
+        <div class="temp-row">
+          <div class="temp-label">SSD NVMe</div>
+          <div class="temp-bar"><div class="temp-fill" style="width:45%;background:linear-gradient(90deg,#4ecca3,#ffd166);"></div></div>
+          <div class="temp-val" style="color:var(--yellow);">40–60°C</div>
+        </div>
+        <div class="temp-zones"><span>0°C</span><span>25°C</span><span>50°C</span><span>75°C</span><span>100°C+</span></div>
+      </div>
+
+      <div class="callout c-red">
+        <span class="ci">🔥</span>
+        <div><strong>Thermal Throttling:</strong> Khi CPU/GPU quá nóng (>90–95°C), chúng <em>tự động giảm tốc độ</em> để bảo vệ mình — gọi là Thermal Throttling. Máy sẽ lag đột ngột dù cấu hình cao!</div>
+      </div>
+    </div>
+
+    <!-- AIR COOLING -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(116,185,255,.15);">🌬️</div>
+        <div class="sec-title">Air Cooling — Tản nhiệt khí</div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <h4 style="color:var(--blue);">📦 Stock Cooler (đi kèm CPU)</h4>
+          <ul>
+            <li>✅ Miễn phí, đủ dùng cho CPU ở xung nhịp mặc định</li>
+            <li>✅ Đơn giản, lắp ngay</li>
+            <li>❌ Ồn ở tải cao</li>
+            <li>❌ Không đủ nếu CPU TDP cao (>65W)</li>
+            <li>❌ Nhiệt độ cao hơn aftermarket</li>
+            <li>🔸 Intel i3/i5 thường có, i7/i9 không có</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--teal);">🚀 Aftermarket Cooler (mua riêng)</h4>
+          <ul>
+            <li>✅ Nhiệt độ thấp hơn 10–20°C</li>
+            <li>✅ Yên tĩnh hơn đáng kể</li>
+            <li>✅ Bền hơn, quạt có thể thay</li>
+            <li>🔸 Nockua NH-D15: Tốt nhất air cooling</li>
+            <li>🔸 DeepCool AK620: Giá/hiệu năng tốt</li>
+            <li>🔸 be quiet! Dark Rock Pro 4: Im lặng nhất</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 style="color:var(--orange);">🧴 Keo tản nhiệt (Thermal Paste) — Quan trọng hơn bạn nghĩ!</h4>
+        <div class="g2" style="margin-top:8px;">
+          <div>
+            <p style="margin-bottom:8px;"><strong>Vai trò:</strong> Lấp đầy khoảng hở hiển vi giữa CPU và tản nhiệt (hai bề mặt kim loại không hoàn toàn phẳng). Giúp dẫn nhiệt tốt hơn nhiều so với không khí.</p>
+            <p><strong>Khi nào cần thay?</strong></p>
+            <ul style="margin-top:4px;">
+              <li>Sau 2–3 năm (keo khô cứng)</li>
+              <li>Khi tháo tản nhiệt ra</li>
+              <li>CPU đột ngột nóng hơn 10–15°C</li>
+            </ul>
+          </div>
+          <div>
+            <p style="margin-bottom:8px;"><strong>Các loại keo phổ biến:</strong></p>
+            <div class="tw">
+              <table>
+                <thead><tr><th>Loại</th><th>Hiệu năng</th><th>Giá</th></tr></thead>
+                <tbody>
+                  <tr><td>Thermal Grizzly Kryonaut</td><td class="tgrn">Xuất sắc</td><td>~150k</td></tr>
+                  <tr><td>Noctua NT-H1</td><td class="tgrn">Rất tốt</td><td>~120k</td></tr>
+                  <tr><td>Arctic MX-4</td><td class="torg">Tốt</td><td>~80k</td></tr>
+                  <tr><td>Cooler Master HTK-002</td><td>Đủ dùng</td><td>~30k</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout c-yellow" style="margin-bottom:0;margin-top:8px;">
+              <span class="ci">⚠️</span>
+              <div>Bôi đúng lượng: <strong>hạt gạo</strong> ở giữa CPU. Quá nhiều hoặc quá ít đều giảm hiệu năng!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIQUID COOLING -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(0,210,211,.15);">💧</div>
+        <div class="sec-title">Liquid Cooling — Tản nhiệt nước</div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <h4 style="color:var(--teal);">🔵 AIO (All-In-One)</h4>
+          <p style="margin-bottom:8px;">Hệ thống kín, lắp ngay — gồm: <strong>đầu block</strong> gắn CPU + <strong>ống dẫn nước</strong> + <strong>radiator</strong> (bộ tản nhiệt) + quạt.</p>
+          <ul>
+            <li>✅ Lắp dễ, không bảo trì</li>
+            <li>✅ Đẹp hơn air, tản nhiệt tốt</li>
+            <li>✅ Không che slot RAM</li>
+            <li>❌ Pump hỏng = CPU cháy ngay</li>
+            <li>❌ Giá 800k–3 triệu</li>
+            <li>🔸 Size: 120mm, 240mm, 360mm radiator</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--purple);">🔮 Custom Loop (Nước tùy chỉnh)</h4>
+          <p style="margin-bottom:8px;">Tự thiết kế hệ thống: reservoir + pump + block + radiator + ống + fitting + nước màu.</p>
+          <ul>
+            <li>✅ Hiệu năng tốt nhất tuyệt đối</li>
+            <li>✅ Làm mát được cả GPU, RAM</li>
+            <li>✅ Đẹp kinh khủng (ống trong suốt, LED)</li>
+            <li>❌ Giá 5–20 triệu++</li>
+            <li>❌ Bảo trì mỗi 1–2 năm</li>
+            <li>❌ Rủi ro rò rỉ nước cao</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- LUỒNG GIÓ -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(78,204,163,.15);">🌀</div>
+        <div class="sec-title">Luồng gió trong case — Positive / Negative / Neutral</div>
+      </div>
+      <div class="airflow-box">
+        <h4 style="font-size:.85rem;font-weight:700;color:var(--muted);margin-bottom:12px;">💨 3 kiểu áp suất trong case</h4>
+        <div class="g3">
+          <div class="card" style="margin-bottom:0;">
+            <h4 style="color:var(--green);">➕ Positive Pressure</h4>
+            <p><strong>Intake > Exhaust</strong><br>Quạt vào nhiều hơn quạt ra</p>
+            <ul style="margin-top:8px;">
+              <li>✅ Ít bụi hơn (áp suất đẩy bụi ra)</li>
+              <li>✅ Tốt cho môi trường nhiều bụi</li>
+              <li>❌ Nhiệt độ hơi cao hơn</li>
+            </ul>
+          </div>
+          <div class="card" style="margin-bottom:0;">
+            <h4 style="color:var(--red);">➖ Negative Pressure</h4>
+            <p><strong>Exhaust > Intake</strong><br>Quạt ra nhiều hơn quạt vào</p>
+            <ul style="margin-top:8px;">
+              <li>✅ Nhiệt độ thấp nhất</li>
+              <li>❌ Hút bụi vào qua khe hở</li>
+              <li>❌ Case nhanh bẩn</li>
+            </ul>
+          </div>
+          <div class="card" style="margin-bottom:0;">
+            <h4 style="color:var(--yellow);">⚖️ Neutral (Cân bằng)</h4>
+            <p><strong>Intake = Exhaust</strong><br>Số quạt vào bằng quạt ra</p>
+            <ul style="margin-top:8px;">
+              <li>✅ Cân bằng nhiệt độ & bụi</li>
+              <li>✅ Phổ biến nhất</li>
+              <li>🔸 Khuyến nghị cho đa số</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout c-green" style="margin-top:12px;margin-bottom:0;">
+          <span class="ci">💡</span>
+          <div><strong>Luồng gió lý tưởng:</strong> Gió vào từ <strong>trước & dưới</strong> case (mát) → qua linh kiện → ra <strong>sau & trên</strong> (nóng). Không khí nóng bao giờ cũng đi lên trên!</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- ═══ TAB 3: THỰC HÀNH ═══ -->
+  <div class="tab-pane" id="tab-t3">
+  <div class="content">
+
+    <!-- THỰC HÀNH 1: HWiNFO -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(108,138,255,.15);">🖥️</div>
+        <div class="sec-title">Thực hành 1 — Dùng HWiNFO64 / HWMonitor</div>
+        <span class="sec-sub">Kiểm tra điện áp & nhiệt độ</span>
+      </div>
+
+      <div class="callout c-blue">
+        <span class="ci">📥</span>
+        <div><strong>Tải về:</strong> HWiNFO64 tại <strong>hwinfo.com</strong> (miễn phí, portable — không cần cài). HWMonitor tại <strong>cpuid.com/softwares/hwmonitor.html</strong></div>
+      </div>
+
+      <div class="card">
+        <h4 style="color:var(--yellow);">⚡ Kiểm tra điện áp nguồn (Voltages)</h4>
+        <p style="margin-bottom:10px;">Sau khi mở HWiNFO64 → chọn <strong>Sensors</strong> → tìm mục <strong>Voltages</strong>:</p>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Đường điện</th><th>Giá trị chuẩn</th><th>Ngưỡng nguy hiểm</th><th>Nếu lệch > 5%</th></tr></thead>
+            <tbody>
+              <tr><td class="tmon">+12V</td><td class="tgrn">11.4V – 12.6V</td><td class="tred">&lt;11V hoặc &gt;13V</td><td class="tred">Nguy hiểm!</td></tr>
+              <tr><td class="tmon">+5V</td><td class="tgrn">4.75V – 5.25V</td><td class="tred">&lt;4.5V hoặc &gt;5.5V</td><td class="tred">Kiểm tra nguồn</td></tr>
+              <tr><td class="tmon">+3.3V</td><td class="tgrn">3.14V – 3.47V</td><td class="tred">&lt;3.0V hoặc &gt;3.6V</td><td class="tred">Thay nguồn</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout c-yellow" style="margin-bottom:0;">
+          <span class="ci">⚠️</span>
+          <div>Điện áp <strong>dao động liên tục</strong> (fluctuating) dù máy không làm gì — đó là dấu hiệu nguồn kém, cần thay ngay!</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 style="color:var(--teal);">🌡️ Kiểm tra nhiệt độ</h4>
+        <p style="margin-bottom:10px;">Trong HWiNFO64 Sensors, tìm:</p>
+        <ul>
+          <li><strong>CPU Package</strong> — nhiệt độ tổng CPU (quan trọng nhất)</li>
+          <li><strong>GPU Temperature</strong> — nhiệt độ GPU</li>
+          <li><strong>Drive Temperature</strong> — nhiệt độ ổ cứng HDD/SSD (nên &lt;50°C)</li>
+          <li><strong>Tcase / Tjunction</strong> — nhiệt độ trong chip (Tjunction là max)</li>
+        </ul>
+        <div class="callout c-green" style="margin-top:10px;margin-bottom:0;">
+          <span class="ci">✅</span>
+          <div>Bật HWiNFO khi máy <strong>idle</strong> (không làm gì) 5 phút → ghi nhiệt độ. Sau đó chạy game/render → ghi lại. So sánh = biết máy làm mát tốt không.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 style="color:var(--purple);">💨 Kiểm tra tốc độ quạt (Fan Speed - RPM)</h4>
+        <ul>
+          <li>Quạt CPU thường: <strong>800–1500 RPM</strong> khi idle, lên 2000+ RPM khi tải</li>
+          <li>Quạt case: <strong>500–1200 RPM</strong> thông thường</li>
+          <li>Quạt GPU: có thể <strong>dừng hoàn toàn</strong> khi nhiệt độ &lt;60°C (semi-passive)</li>
+          <li>Nếu quạt CPU = 0 RPM khi máy đang chạy → <strong>rất nguy hiểm!</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- THỰC HÀNH 2: TÍNH CÔNG SUẤT -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(255,159,67,.15);">🧮</div>
+        <div class="sec-title">Thực hành 2 — Tính công suất nguồn cần thiết</div>
+      </div>
+
+      <div class="callout c-orange">
+        <span class="ci">🌐</span>
+        <div><strong>Công cụ online chuyên dụng:</strong> <strong>OuterVision PSU Calculator</strong> tại <strong>outervision.com/power-supply-calculator</strong> — nhập đầy đủ cấu hình → ra con số chính xác.</div>
+      </div>
+
+      <!-- MINI CALCULATOR -->
+      <div class="calc-box">
+        <div style="font-size:.85rem;font-weight:700;color:var(--orange);margin-bottom:14px;">⚡ Máy tính ước tính nhanh công suất nguồn</div>
+        <div class="calc-row"><div class="calc-label">CPU TDP (W)</div><input class="calc-input" type="number" id="cpuW" placeholder="65" min="0" max="400"><div class="calc-unit">Watt</div></div>
+        <div class="calc-row"><div class="calc-label">GPU TDP (W)</div><input class="calc-input" type="number" id="gpuW" placeholder="150" min="0" max="600"><div class="calc-unit">Watt</div></div>
+        <div class="calc-row"><div class="calc-label">RAM (số thanh)</div><input class="calc-input" type="number" id="ramStick" placeholder="2" min="0" max="16"><div class="calc-unit">× 5W/thanh</div></div>
+        <div class="calc-row"><div class="calc-label">Ổ cứng (SSD/HDD)</div><input class="calc-input" type="number" id="driveN" placeholder="2" min="0" max="10"><div class="calc-unit">× 8W/ổ</div></div>
+        <div class="calc-row"><div class="calc-label">Quạt case</div><input class="calc-input" type="number" id="fanN" placeholder="3" min="0" max="20"><div class="calc-unit">× 3W/quạt</div></div>
+        <button class="calc-btn" onclick="calcPSU()">⚡ Tính công suất</button>
+        <div class="calc-result" id="psuResult" style="display:none;">
+          <div class="cr-num" id="psuNum">450W</div>
+          <div class="cr-sub" id="psuSub">Khuyến nghị mua nguồn (đã cộng buffer 20% + mainboard 50W)</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 style="color:var(--yellow);">📝 TDP của các CPU/GPU phổ biến</h4>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Linh kiện</th><th>TDP</th><th>Ghi chú</th></tr></thead>
+            <tbody>
+              <tr><td>Intel Core i3-12100F</td><td class="tgrn">58W</td><td>Tiết kiệm điện</td></tr>
+              <tr><td>Intel Core i5-13600K</td><td class="torg">125W</td><td>Boost lên 181W</td></tr>
+              <tr><td>Intel Core i9-13900K</td><td class="tred">125W</td><td>Boost lên 253W!</td></tr>
+              <tr><td>AMD Ryzen 5 7600X</td><td class="torg">105W</td><td>Hiệu quả tốt</td></tr>
+              <tr><td>NVIDIA RTX 3060</td><td class="torg">170W</td><td>Phổ biến gaming</td></tr>
+              <tr><td>NVIDIA RTX 4070</td><td class="torg">200W</td><td>Hiệu năng/watt tốt</td></tr>
+              <tr><td>NVIDIA RTX 4090</td><td class="tred">450W</td><td>Cần nguồn 850W+</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- THỰC HÀNH 3: STRESS TEST -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(255,107,107,.15);">🔥</div>
+        <div class="sec-title">Thực hành 3 — Stress Test kiểm tra nhiệt độ</div>
+      </div>
+
+      <div class="callout c-red">
+        <span class="ci">⚠️</span>
+        <div><strong>Lưu ý trước khi chạy stress test:</strong> Mở HWiNFO64 trước để theo dõi nhiệt độ liên tục. Nếu CPU vượt 95°C — dừng ngay! Cần cải thiện làm mát trước.</div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <h4 style="color:var(--blue);">🧪 Prime95 — CPU Stress Test</h4>
+          <p style="margin-bottom:8px;">Tải về tại <strong>mersenne.org/prime95</strong></p>
+          <ol style="padding-left:16px;">
+            <li style="font-size:.84rem;color:#b8bcd8;margin-bottom:5px;">Mở Prime95 → chọn <strong>"Just Stress Testing"</strong></li>
+            <li style="font-size:.84rem;color:#b8bcd8;margin-bottom:5px;">Chọn <strong>"Small FFTs"</strong> (tạo nhiệt nhiều nhất)</li>
+            <li style="font-size:.84rem;color:#b8bcd8;margin-bottom:5px;">Chạy <strong>10–15 phút</strong>, theo dõi nhiệt độ</li>
+            <li style="font-size:.84rem;color:#b8bcd8;margin-bottom:5px;"><strong>Mục tiêu:</strong> CPU &lt;85°C (lý tưởng &lt;80°C)</li>
+            <li style="font-size:.84rem;color:#b8bcd8;">Nếu >90°C → cần cải thiện tản nhiệt</li>
+          </ol>
+          <div class="callout c-teal" style="margin-top:10px;margin-bottom:0;">
+            <span class="ci">💡</span>
+            <div>Sau khi dừng Prime95, CPU về idle trong 2 phút → nhiệt độ phải giảm về &lt;50°C. Nếu không, tản nhiệt có vấn đề.</div>
+          </div>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--orange);">🎮 FurMark — GPU Stress Test</h4>
+          <p style="margin-bottom:8px;">Tải về tại <strong>geeks3d.com/furmark</strong></p>
+          <ol style="padding-left:16px;">
+            <li style="font-size:.84rem;color:#b8bcd8;margin-bottom:5px;">Mở FurMark → <strong>GPU Stress Test</strong></li>
+            <li style="font-size:.84rem;color:#b8bcd8;margin-bottom:5px;">Chọn resolution = màn hình thực tế</li>
+            <li style="font-size:.84rem;color:#b8bcd8;margin-bottom:5px;">Chạy <strong>10 phút</strong>, theo dõi GPU temp</li>
+            <li style="font-size:.84rem;color:#b8bcd8;margin-bottom:5px;"><strong>Mục tiêu:</strong> GPU &lt;83°C</li>
+            <li style="font-size:.84rem;color:#b8bcd8;">Nếu >90°C → vệ sinh quạt GPU, thay keo</li>
+          </ol>
+          <div class="callout c-red" style="margin-top:10px;margin-bottom:0;">
+            <span class="ci">⚠️</span>
+            <div>FurMark cực kỳ nặng — chỉ chạy tối đa <strong>15 phút</strong>. Nếu GPU shutdown đột ngột = quá nhiệt.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THẢO LUẬN -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(180,142,255,.15);">💬</div>
+        <div class="sec-title">Thảo luận — Câu hỏi thực tế</div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <h4 style="color:var(--purple);">🔥 Dấu hiệu nguồn yếu?</h4>
+          <ul>
+            <li>Máy tắt đột ngột khi chạy game nặng</li>
+            <li>Reboot ngẫu nhiên không rõ lý do</li>
+            <li>Điện áp 12V dao động thấy rõ trong HWiNFO</li>
+            <li>Tiếng kêu bất thường từ khu vực nguồn</li>
+            <li>Mùi khét hoặc khói nhẹ (nguy hiểm!)</li>
+            <li>USB/thiết bị ngoài tự ngắt kết nối</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--teal);">❄️ Khi nào nâng cấp tản nhiệt?</h4>
+          <ul>
+            <li>CPU liên tục >85°C khi chơi game</li>
+            <li>Máy lag đột ngột → Thermal Throttling</li>
+            <li>Quạt CPU chạy 100% RPM liên tục → ồn</li>
+            <li>Keo tản nhiệt đã dùng >3 năm</li>
+            <li>Overclock CPU → cần tản nhiệt mạnh hơn</li>
+            <li>Nâng cấp lên CPU TDP cao hơn</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- ═══ TAB 4: BÀI TẬP ═══ -->
+  <div class="tab-pane" id="tab-t4">
+  <div class="content">
+
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(78,204,163,.15);">✏️</div>
+        <div class="sec-title">Bài tập kiểm tra kiến thức</div>
+        <span class="sec-sub">Nhấn "Xem đáp án" để kiểm tra</span>
+      </div>
+
+      <div class="exercise ex-easy">
+        <div class="ex-tag">🟢 Cơ bản — Lý thuyết PSU</div>
+        <p class="ex-p"><strong>Câu 1.</strong> PSU chuyển đổi điện như thế nào? Liệt kê 3 mức điện áp DC mà PSU cung cấp và cho biết mỗi mức dùng cho linh kiện gì.</p>
+        <button class="toggle-ans" onclick="toggleAns(this)">👁 Xem đáp án</button>
+        <div class="ans-box">
+PSU chuyển 220V AC (xoay chiều) → DC (một chiều):
+
++12V (dây vàng) → CPU, GPU, quạt, ổ cứng
++5V  (dây đỏ)  → USB, ổ đĩa quang, board mạch nhỏ
++3.3V (dây cam) → RAM, mainboard, một số chip
+        </div>
+      </div>
+
+      <div class="exercise ex-easy">
+        <div class="ex-tag">🟢 Cơ bản — 80 PLUS</div>
+        <p class="ex-p"><strong>Câu 2.</strong> Xếp theo thứ tự hiệu suất từ thấp đến cao: Gold, Titanium, Bronze, White, Platinum, Silver</p>
+        <button class="toggle-ans" onclick="toggleAns(this)">👁 Xem đáp án</button>
+        <div class="ans-box">Thấp → Cao:
+White → Bronze → Silver → Gold → Platinum → Titanium
+
+Hiệu suất tương ứng:
+White: ≥80% | Bronze: ≥82% | Silver: ≥85%
+Gold: ≥87%  | Platinum: ≥89% | Titanium: ≥90%</div>
+      </div>
+
+      <div class="exercise ex-med">
+        <div class="ex-tag">🟡 Trung bình — Tính công suất</div>
+        <p class="ex-p"><strong>Câu 3.</strong> Tính công suất nguồn cần thiết cho cấu hình sau:</p>
+        <ul class="ex-ul">
+          <li>CPU: Intel i5-13600K (TDP 125W, boost 181W)</li>
+          <li>GPU: RTX 3060 (TDP 170W)</li>
+          <li>RAM: 2 thanh</li>
+          <li>1 SSD NVMe + 1 HDD</li>
+          <li>3 quạt case</li>
+        </ul>
+        <p class="ex-p" style="font-size:.78rem;color:var(--muted);">💡 Gợi ý: Dùng TDP boost (181W) cho CPU để an toàn. Mainboard ≈ 50W. Buffer 20%.</p>
+        <button class="toggle-ans" onclick="toggleAns(this)">👁 Xem đáp án</button>
+        <div class="ans-box">
+CPU boost:     181W
+GPU:           170W
+Mainboard:      50W
+RAM (2×5W):     10W
+SSD (5W):        5W
+HDD (8W):        8W
+3 quạt (3×3W):   9W
+─────────────────────
+Tổng tiêu thụ: 433W
+× 1.2 buffer:  520W
+
+→ Khuyến nghị: Mua nguồn 550W–650W
+→ Lý tưởng: Seasonic Focus Gold 650W
+   hoặc Corsair RM650x (Gold, Modular)</div>
+      </div>
+
+      <div class="exercise ex-med">
+        <div class="ex-tag">🟡 Trung bình — Chuẩn đoán sự cố</div>
+        <p class="ex-p"><strong>Câu 4.</strong> Bạn đang chơi game, đột nhiên máy tắt nguồn. Sau khi bật lại, CPU đạt 96°C trong 3 phút rồi máy lại tắt. Trong HWiNFO, điện áp 12V dao động từ 11.3V đến 12.1V. Hãy xác định:</p>
+        <ul class="ex-ul">
+          <li>a) Vấn đề chính là gì?</li>
+          <li>b) Có bao nhiêu vấn đề đang xảy ra đồng thời?</li>
+          <li>c) Bạn sẽ xử lý theo thứ tự nào?</li>
+        </ul>
+        <button class="toggle-ans" onclick="toggleAns(this)">👁 Xem đáp án</button>
+        <div class="ans-box">
+a) Có 2 vấn đề đồng thời:
+   1. Nhiệt độ 96°C → Thermal Throttling → máy tắt do bảo vệ
+   2. 12V dao động (11.3V–12.1V) → nguồn kém/yếu
+
+b) 2 vấn đề: tản nhiệt + nguồn điện
+
+c) Thứ tự xử lý:
+   Bước 1: Kiểm tra & vệ sinh tản nhiệt CPU (sạch bụi)
+   Bước 2: Thay keo tản nhiệt mới
+   Bước 3: Kiểm tra quạt CPU còn quay không
+   Bước 4: Nếu nhiệt độ ổn rồi mà vẫn tắt → thay nguồn
+   
+   ⚠️ Không chạy máy khi nguồn đang có vấn đề điện áp!</div>
+      </div>
+
+      <div class="exercise ex-hard">
+        <div class="ex-tag">🔴 Nâng cao — Tư vấn build PC</div>
+        <p class="ex-p"><strong>Câu 5.</strong> Khách hàng muốn build PC gaming với ngân sách <strong>15 triệu</strong>, chơi game AAA ở 1080p, yêu cầu "máy phải mát và yên tĩnh". Họ hỏi bạn về nguồn và tản nhiệt. Hãy đề xuất:</p>
+        <ul class="ex-ul">
+          <li>a) Công suất nguồn tối thiểu và thương hiệu khuyên dùng</li>
+          <li>b) Nên chọn Air Cooling hay AIO? Tại sao?</li>
+          <li>c) Kiểu airflow trong case nên chọn?</li>
+        </ul>
+        <button class="toggle-ans" onclick="toggleAns(this)">👁 Xem đáp án</button>
+        <div class="ans-box">
+a) Với 15 triệu, cấu hình phổ biến:
+   i5-13400F (65W) + RTX 4060 (115W)
+   → Tổng ~65+115+50+30 = 260W × 1.2 ≈ 312W
+   → Chọn nguồn 550W để có buffer rộng
+   → Khuyến nghị: Corsair CX550F Bronze (~1.2tr)
+     hoặc Seasonic Focus GX-550 Gold (~1.8tr)
+
+b) Air Cooling là đủ và hợp lý hơn vì:
+   - i5-13400F TDP thấp (65W), không cần AIO
+   - Air cooling Deepcool AK400 (~400k) mát tốt
+   - AIO thêm chi phí 800k+ không cần thiết
+   - Air cooling đáng tin cậy hơn (không rò rỉ)
+   - Tiết kiệm ngân sách cho GPU tốt hơn
+
+c) Neutral pressure hoặc Positive pressure nhẹ:
+   - 2 quạt intake (trước) + 1 exhaust (sau) + 1 top
+   - Gắn dust filter ở quạt intake để giảm bụi
+   - Giúp máy mát + ít bụi + yên tĩnh</div>
+      </div>
+
+    </div>
+  </div>
+  </div>
+
+  <!-- ═══ TAB 5: TÓM TẮT ═══ -->
+  <div class="tab-pane" id="tab-t5">
+  <div class="content">
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:rgba(255,209,102,.15);">💡</div>
+        <div class="sec-title">Tóm tắt — Những điều quan trọng nhất</div>
+      </div>
+
+      <div class="g2">
+        <div>
+          <div class="callout c-red" style="margin-bottom:10px;">
+            <span class="ci">⚡</span>
+            <div><strong>NGUỒN:</strong> Không bao giờ tiết kiệm tiền mua nguồn rởm. Nguồn Gold 550W tốt hơn nguồn White 650W rẻ tiền.</div>
+          </div>
+          <div class="callout c-yellow">
+            <span class="ci">🏅</span>
+            <div><strong>80 PLUS:</strong> Chọn tối thiểu Bronze, lý tưởng là Gold. Titanium quá đắt cho người dùng thường.</div>
+          </div>
+          <div class="callout c-blue">
+            <span class="ci">🔌</span>
+            <div><strong>MODULAR:</strong> Semi-modular là lựa chọn tốt nhất về giá/giá trị — dây quan trọng cố định, dây phụ rời.</div>
+          </div>
+        </div>
+        <div>
+          <div class="callout c-teal" style="margin-bottom:10px;">
+            <span class="ci">❄️</span>
+            <div><strong>NHIỆT ĐỘ AN TOÀN:</strong> CPU gaming &lt;85°C, GPU gaming &lt;85°C. Vượt 90°C liên tục → cần can thiệp.</div>
+          </div>
+          <div class="callout c-green">
+            <span class="ci">🧴</span>
+            <div><strong>KEO TẢN NHIỆT:</strong> Thay sau 2–3 năm. Lượng = hạt gạo. Dùng Arctic MX-4 hoặc Noctua NT-H1 là đủ tốt.</div>
+          </div>
+          <div class="callout c-orange">
+            <span class="ci">🌀</span>
+            <div><strong>LUỒNG GIÓ:</strong> Intake trước/dưới, exhaust sau/trên. Neutral pressure là phổ biến và hiệu quả nhất.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:8px;">
+        <h4 style="color:var(--yellow);">🔗 Kết nối buổi tiếp theo</h4>
+        <p><strong>Buổi 10 — Lắp ráp máy tính:</strong> Áp dụng toàn bộ kiến thức đã học — thực hành lắp CPU, bôi keo tản nhiệt, gắn tản nhiệt, kéo dây nguồn, quản lý luồng gió.</p>
+      </div>
+
+      <div class="callout c-purple" style="margin-top:4px;">
+        <span class="ci">🛠️</span>
+        <div><strong>Checklist sau buổi học:</strong> Đã chạy HWiNFO và ghi lại nhiệt độ CPU/GPU của máy mình chưa? Điện áp 12V của máy đang ở mức bao nhiêu? Nếu chưa — hãy làm ngay!</div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+</div><!-- /page-s9 -->
+
+<!-- Coming soon pages for other sessions -->
+<div class="page" id="page-other">
+  <div class="coming">
+    <div class="coming-icon">🔧</div>
+    <h2>Nội dung đang được biên soạn</h2>
+    <p>Buổi học này sẽ sớm được cập nhật. Hãy xem Buổi 9 trước nhé!</p>
+  </div>
+</div>
+
+</main>
+
+<script>
+function showPage(id, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + id) || document.getElementById('page-other');
+  if (pg) pg.classList.add('active');
+  if (navEl) navEl.classList.add('active');
+  document.querySelector('.main').scrollTo(0, 0);
+  if (window.innerWidth <= 768) document.getElementById('sb').classList.remove('open');
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  document.querySelector('.main').scrollTo(0, 0);
+}
+
+function toggleAns(btn) {
+  const box = btn.nextElementSibling;
+  const open = box.style.display === 'block';
+  box.style.display = open ? 'none' : 'block';
+  btn.innerHTML = open ? '👁 Xem đáp án' : '🙈 Ẩn đáp án';
+}
+
+function calcPSU() {
+  const cpu  = parseFloat(document.getElementById('cpuW').value)    || 65;
+  const gpu  = parseFloat(document.getElementById('gpuW').value)    || 150;
+  const ram  = (parseFloat(document.getElementById('ramStick').value) || 2) * 5;
+  const drv  = (parseFloat(document.getElementById('driveN').value)  || 2) * 8;
+  const fan  = (parseFloat(document.getElementById('fanN').value)    || 3) * 3;
+  const mb   = 50;
+  const total = cpu + gpu + ram + drv + fan + mb;
+  const rec   = Math.ceil((total * 1.2) / 50) * 50;
+  const next  = rec + 50;
+
+  let tier = rec <= 450 ? '450W' : rec <= 550 ? '550W' : rec <= 650 ? '650W' : rec <= 750 ? '750W' : '850W+';
+  let brand = rec <= 550 ? 'Corsair CX550F Bronze hoặc Seasonic Focus GX-550 Gold'
+            : rec <= 650 ? 'Corsair RM650x Gold hoặc Seasonic Focus GX-650 Gold'
+            : 'Seasonic Prime TX-750 Titanium hoặc Corsair HX750';
+
+  document.getElementById('psuNum').textContent = tier;
+  document.getElementById('psuSub').innerHTML =
+    `Tổng tiêu thụ ước tính: <strong style="color:var(--yellow)">${total}W</strong> → sau buffer 20% = ${rec}W<br>
+     Khuyến nghị: <strong style="color:var(--text)">${brand}</strong>`;
+  document.getElementById('psuResult').style.display = 'block';
+}
+</script>
+</body>
+</html>
